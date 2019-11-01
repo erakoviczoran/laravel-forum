@@ -13,7 +13,7 @@ class ParticipateInForumTest extends DatabaseTestCase
 
         $thread = create('App\Thread');
 
-        $this->post(route('threads.replies', $thread->id));
+        $this->post(route('threads.replies', [$thread->channel->id, $thread->id]));
     }
 
     /** @test */
@@ -22,10 +22,9 @@ class ParticipateInForumTest extends DatabaseTestCase
         $this->signIn();
 
         $thread = create('App\Thread');
-
         $reply = make('App\Reply');
 
-        $this->post(route('threads.replies', $thread->id), $reply->toArray());
+        $this->post(route('threads.replies', [$thread->channel->id, $thread->id]), $reply->toArray());
 
         $this->get(route('threads.show', [$thread->channel->id, $thread->id]))
             ->assertSee($reply->body);
