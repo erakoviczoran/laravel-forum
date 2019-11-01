@@ -33,11 +33,10 @@ class CreateThreadsTest extends DatabaseTestCase
         $this->signIn();
 
         // when we hit the endpoint to create thread
-        $thread = make('App\Thread');
+        $thread = create('App\Thread');
         $this->post('/threads', $thread->toArray());
 
         // when we visit thread page check that we see new thread
-        $thread = create('App\Thread');
         $this->get(route('threads.show', [$thread->channel->id, $thread->id]))
             ->assertSee($thread->title)
             ->assertSee($thread->body);
