@@ -15,6 +15,11 @@ class RepliesController extends Controller
 
     public function store(Channel $channel, Thread $thread)
     {
+        $this->validate(request(), [
+            'body' => 'required',
+            'user_id' => 'required|exists:users,id',
+        ]);
+
         $thread->addReply([
             'user_id' => auth()->id(),
             'body' => request('body'),

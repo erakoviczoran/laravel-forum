@@ -18,7 +18,7 @@
     </div>
 
     @foreach ($thread->replies as $reply)
-    @include('threads.reply')
+    @include('threads.replies')
     @endforeach
 
 
