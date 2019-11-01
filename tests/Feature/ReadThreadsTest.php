@@ -35,4 +35,16 @@ class ReadThreadsTest extends DatabaseTestCase
         $this->get(route('threads.show', [$this->thread->channel->id, $this->thread->id]))
             ->assertSee($reply->body);
     }
+
+    /** @test */
+    public function aUserCanFilterThreadsAccordingToATag()
+    {
+        $channel = create('App\Channel');
+        $threadInChannel = create('App\Thread', ['channel_id' => $channel->id]);
+        $threadNotInChannel = create('App\Thread');
+
+        $this->get('/threads/' . $channel->id)
+            ->assertSee($threadInChannel->title)
+            ->assertDontSee($threadNotInChannel->title);
+    }
 }
