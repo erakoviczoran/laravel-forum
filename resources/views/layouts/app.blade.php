@@ -48,6 +48,7 @@
                                 <a class="dropdown-item"
                                     href="{{ route('threads', ['by' => auth()->user()->name]) }}">My Threads</a>
                                 @endif
+                                <a class="dropdown-item" href="{{ route('threads', ['popular' => 1]) }}">Popular All Time</a>
                             </div>
                         </li>
                         <li class="d-flex align-items-center mx-2">

@@ -27,3 +27,4 @@ Route::get('/threads/{channel}/{thread}', 'ThreadsController@show')->name('threa
 
 Route::post('/threads/{channel}/{thread}/replies', 'RepliesController@store')->name('threads.replies');
 
+Route::post('/replies/{reply}/favorites', 'FavoritesController@store')->name('replies.favorites');

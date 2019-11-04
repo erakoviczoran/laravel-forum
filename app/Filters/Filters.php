@@ -4,7 +4,6 @@ namespace App\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 
 abstract class Filters
 {
@@ -21,19 +20,18 @@ abstract class Filters
     {
         $this->builder = $builder;
 
-        $this->getFilters()
-            ->filter(function ($filter) {
-                return method_exists($this, $filter);
-            })->each(function ($filter, $value) {
+        foreach($this->getFilters() as $filter => $value) {
+            if (method_exists($this, $filter)) {
                 $this->$filter($value);
-            });
+            }
+        }
 
         return $this->builder;
     }
 
-    public function getFilters(): Collection
+    public function getFilters()
     {
-        return collect($this->request->only($this->filters))->flip();
+        return $this->request->only($this->filters);
     }
 
 }

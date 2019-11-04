@@ -20,14 +20,15 @@
                 <div class="card-body">
                     <p>This Thread was published {{ $thread->created_at->diffForHumans() }} by
                         <a href="#">{{ $thread->user->name }}</a>, and currently has
-                        {{ $thread->replies_count . ' ' . Str::plural('comment', $thread->replies_count) . '.' }}</p>
+                        {{ $thread->replies_count . ' ' . Str::plural('comment', $thread->replies_count) . '.' }}
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
     @foreach ($replies as $reply)
-        @include('threads.replies')
+    @include('threads.replies')
     @endforeach
 
     {{ $replies->links() }}
