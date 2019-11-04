@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
+    <div class="row">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
@@ -15,22 +15,31 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <p>This Thread was published {{ $thread->created_at->diffForHumans() }} by
+                        <a href="#">{{ $thread->user->name }}</a>, and currently has
+                        {{ $thread->replies_count . ' ' . Str::plural('comment', $thread->replies_count) . '.' }}</p>
+                </div>
+            </div>
+        </div>
     </div>
 
-    @foreach ($thread->replies as $reply)
-    @include('threads.replies')
+    @foreach ($replies as $reply)
+        @include('threads.replies')
     @endforeach
+
+    {{ $replies->links() }}
 
 
     @if (auth()->check())
-    <div class="row justify-content-center mt-3">
+    <div class="row mt-3">
         <div class="col-md-7 offset-1">
             <form action="{{ route('threads.replies', [$thread->channel->id, $thread->id]) }}" method="POST">
                 @csrf
-                <div>
-                    <textarea class="w-100" name="body" id="" rows="5"></textarea>
-                    <input type="submit" value="Post">
-                </div>
+                <textarea class="form-control" name="body" id="" rows="5"></textarea>
+                <input type="submit" class="btn btn-primary mt-2" value="Post">
             </form>
         </div>
     </div>

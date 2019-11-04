@@ -21,12 +21,12 @@ class ThreadsController extends Controller
      */
     public function index(Channel $channel = null, ThreadFilters $filters)
     {
-        $this->getThreads($channel, $filters);
+        $threads = $this->getThreads($channel, $filters);
 
         return view('threads.index', compact('threads'));
     }
 
-    protected function getThreads(Channel $channel, ThreadFilters $filters)
+    protected function getThreads(Channel $channel = null, ThreadFilters $filters)
     {
         $threads = Thread::latest()->filter($filters);
 
@@ -80,7 +80,9 @@ class ThreadsController extends Controller
      */
     public function show(Channel $channel, Thread $thread)
     {
-        return view('threads.show', compact('channel', 'thread'));
+        $replies = $thread->replies()->paginate(20);
+
+        return view('threads.show', compact('channel', 'thread', 'replies'));
     }
 
     /**
