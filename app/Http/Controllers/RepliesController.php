@@ -17,7 +17,6 @@ class RepliesController extends Controller
     {
         $this->validate(request(), [
             'body' => 'required',
-            'user_id' => 'required|exists:users,id',
         ]);
 
         $thread->addReply([

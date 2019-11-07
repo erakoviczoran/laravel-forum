@@ -57,6 +57,42 @@ class CreateThreadsTest extends DatabaseTestCase
     }
 
     /** @test */
+    public function unauthorizedUsersCanNotDeleteThreads()
+    {
+        $this->withExceptionHandling();
+
+        $thread = create('App\Thread');
+
+        $this->delete(route('threads.delete', [
+            'channel' => $thread->channel->id,
+            'thread' => $thread->id,
+        ]))->assertRedirect('/login');
+
+        $this->signIn();
+
+        $this->delete(route('threads.delete', [
+            'channel' => $thread->channel->id,
+            'thread' => $thread->id,
+        ]))->assertStatus(403);
+    }
+
+    /** @test */
+    public function authorizedUsersCanDeleteThreads()
+    {
+        $this->signIn();
+
+        $thread = create('App\Thread', ['user_id' => auth()->id()]);
+
+        $reply = create('App\Reply', ['thread_id' => $thread->id]);
+
+        $this->json('DELETE', route('threads.delete', [$thread->channel, $thread]))
+            ->assertStatus(204);
+
+        $this->assertDatabaseMissing('threads', ['id' => $thread->id]);
+        $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+    }
+
+    /** @test */
     public function aThreadRequiresAValidChannel()
     {
         factory('App\Channel', 2)->create();

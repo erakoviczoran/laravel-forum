@@ -5,9 +5,20 @@
     <div class="row">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">
-                    <a href="#">{{ $thread->user->name }}</a> posted:
-                    {{ $thread->title }}
+                <div class="card-header d-flex">
+                    <div class="flex-grow-1">
+                        <a href="{{ route('profiles.user', $thread->user->id) }}">{{ $thread->user->name }}</a> posted:
+                        {{ $thread->title }}
+                    </div>
+
+                    @can('update', $thread)
+                    <form method="POST" action="{{ route('threads.delete', [$thread->channel->id, $thread->id]) }}"
+                        class="flex-shrink-0">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-outline-secondary">Delete</button>
+                    </form>
+                    @endcan
                 </div>
 
                 <div class="card-body">

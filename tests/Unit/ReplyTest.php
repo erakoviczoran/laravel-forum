@@ -7,10 +7,10 @@ use Tests\DatabaseTestCase;
 class ReplyTest extends DatabaseTestCase
 {
     /** @test */
-    public function itHasAnOwner()
+    public function itHasAnUser()
     {
         $reply = create('App\Reply');
 
-        $this->assertInstanceOf('App\User', $reply->owner);
+        $this->assertInstanceOf('App\User', $reply->user);
     }
 }
