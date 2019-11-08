@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Activity;
 use Tests\DatabaseTestCase;
 
 class CreateThreadsTest extends DatabaseTestCase
@@ -90,6 +91,8 @@ class CreateThreadsTest extends DatabaseTestCase
 
         $this->assertDatabaseMissing('threads', ['id' => $thread->id]);
         $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+
+        $this->assertEquals(0, Activity::count());
     }
 
     /** @test */

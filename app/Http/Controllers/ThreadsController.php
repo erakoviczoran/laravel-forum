@@ -126,7 +126,6 @@ class ThreadsController extends Controller
         $this->authorize('update', $thread);
 
         DB::transaction(function () use ($thread) {
-            $thread->replies()->delete();
             $thread->delete();
         });
 
