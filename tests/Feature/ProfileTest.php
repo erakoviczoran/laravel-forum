@@ -18,11 +18,11 @@ class ProfileTest extends DatabaseTestCase
     /** @test */
     public function profilesDispalyAllThreadsCreatedByTheAssociatedUser()
     {
-        $user = create('App\User');
+        $this->signIn();
 
-        $thread = create('App\Thread', ['user_id' => $user->id]);
+        $thread = create('App\Thread', ['user_id' => auth()->id()]);
 
-        $this->get(route('profiles.user', $user->id))
+        $this->get(route('profiles.user', auth()->user()))
             ->assertSee($thread->title)
             ->assertSee($thread->body);
     }

@@ -8,28 +8,15 @@
             <small>Since {{ $profileUser->created_at->diffForHumans() }}</small>
         </h1>
 
-        @forelse($threads as $thread)
-        <div class="card">
-            <div class="card-header d-flex">
-                <div class="flex-grow-1">
-                    <a href="{{ route('profiles.user', $thread->user) }}">{{ $thread->user->name }}</a> posted:
+        @forelse($activities as $date => $activity)
+            <h3 class="mt-4 mb-3">{{ $date }}</h3>
 
-                    <a href="{{ route('threads.show', [$thread->channel, $thread]) }}">{{ $thread->title }}</a>
-                </div>
-                <div class="flex-shrink-0">
-                    {{ $thread->created_at->diffForHumans() }}
-                </div>
-            </div>
-
-            <div class="card-body">
-                <div class="body">{{ $thread->body }}</div>
-            </div>
-        </div>
+            @foreach($activity as $record)
+                @include("profiles.activities.{$record->type}", ['activity' => $record])
+            @endforeach
         @empty
-        <p>There are no related threads.</p>
+            <p>There are no related threads.</p>
         @endforelse
-
-        {{ $threads->links() }}
     </div>
 </div>
 @endsection

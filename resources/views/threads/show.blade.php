@@ -39,7 +39,7 @@
     </div>
 
     @foreach ($replies as $reply)
-    @include('threads.replies')
+        @include('threads.replies')
     @endforeach
 
     {{ $replies->links() }}
