@@ -39,7 +39,7 @@
     </div>
 
     @foreach ($replies as $reply)
-        @include('threads.replies')
+        @include('threads.reply')
     @endforeach
 
     {{ $replies->links() }}
@@ -48,7 +48,7 @@
     @if (auth()->check())
     <div class="row mt-3">
         <div class="col-md-7 offset-1">
-            <form action="{{ route('threads.replies', [$thread->channel->id, $thread->id]) }}" method="POST">
+            <form action="{{ route('replies.store', [$thread->channel->id, $thread->id]) }}" method="POST">
                 @csrf
                 <textarea class="form-control" name="body" id="" rows="5"></textarea>
                 <input type="submit" class="btn btn-primary mt-2" value="Post">

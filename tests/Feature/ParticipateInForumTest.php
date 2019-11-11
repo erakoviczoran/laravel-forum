@@ -13,7 +13,7 @@ class ParticipateInForumTest extends DatabaseTestCase
 
         $thread = create('App\Thread');
 
-        $this->post(route('threads.replies', [$thread->channel->id, $thread->id]));
+        $this->post(route('replies.store', [$thread->channel->id, $thread->id]));
     }
 
     /** @test */
@@ -24,7 +24,7 @@ class ParticipateInForumTest extends DatabaseTestCase
         $thread = create('App\Thread');
         $reply = make('App\Reply');
 
-        $this->post(route('threads.replies', [$thread->channel->id, $thread->id]), $reply->toArray());
+        $this->post(route('replies.store', [$thread->channel->id, $thread->id]), $reply->toArray());
 
         $this->get(route('threads.show', [$thread->channel->id, $thread->id]))
             ->assertSee($reply->body);
@@ -38,7 +38,63 @@ class ParticipateInForumTest extends DatabaseTestCase
         $thread = create('App\Thread');
         $reply = make('App\Reply', ['body' => null]);
 
-        $this->post(route('threads.replies', [$thread->channel->id, $thread->id]), $reply->toArray())
+        $this->post(route('replies.store', [$thread->channel->id, $thread->id]), $reply->toArray())
             ->assertSessionHasErrors('body');
+    }
+
+    /** @test **/
+    public function unauthorizedUserCanNotDeleteAReplies()
+    {
+        $this->withExceptionHandling();
+
+        $reply = create('App\Reply');
+
+        $this->delete(route('replies.delete', $reply))
+            ->assertRedirect('/login');
+
+        $this->signIn()
+            ->delete(route('replies.delete', $reply))
+            ->assertStatus(403);
+    }
+
+    /** @test **/
+    public function authorizedUsersCanDeleteReplies()
+    {
+        $this->signIn();
+
+        $reply = create('App\Reply', ['user_id' => auth()->id()]);
+
+        $this->delete(route('replies.delete', $reply))->assertStatus(302);
+
+        $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+    }
+
+    /** @test **/
+    public function unauthorizedUserCanNotUpdateAReplies()
+    {
+        $this->withExceptionHandling();
+
+        $reply = create('App\Reply');
+
+        $this->patch(route('replies.update', $reply))
+            ->assertRedirect('/login');
+
+        $this->signIn()
+            ->patch(route('replies.update', $reply))
+            ->assertStatus(403);
+    }
+
+    /** @test **/
+    public function authorizedUsersCanUpdateReplies()
+    {
+        $this->signIn();
+
+        $reply = create('App\Reply', ['user_id' => auth()->id()]);
+
+        $body = 'You updated body of reply.';
+
+        $this->patch(route('replies.update', $reply), ['body' => $body]);
+
+        $this->assertDatabaseHas('replies', ['id' => $reply->id, 'body' => $body]);
     }
 }

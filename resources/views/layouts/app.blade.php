@@ -27,8 +27,12 @@
 
         <main class="py-4">
             @yield('content')
+
+            <flash message="{{ session('flash') }}"></flash>
         </main>
     </div>
+
+    <script scr="{{ asset('js/app.js') }}"></script>
 </body>
 
 </html>

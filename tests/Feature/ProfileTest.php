@@ -9,10 +9,10 @@ class ProfileTest extends DatabaseTestCase
     /** @test */
     public function aUserHasAProfile()
     {
-        $user = create('App\User');
+        $this->signIn();
 
-        $this->get(route('profiles.user', $user->id))
-            ->assertSee($user->name);
+        $this->get(route('profiles.user', auth()->user()))
+            ->assertSee(auth()->user()->name);
     }
 
     /** @test */
