@@ -17,7 +17,7 @@
                 @endif
             @endforeach
         @empty
-            <p>There are no related threads.</p>
+            <p>There are no activity for this user.</p>
         @endforelse
     </div>
 </div>

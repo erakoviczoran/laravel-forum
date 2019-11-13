@@ -26,8 +26,7 @@ class ParticipateInForumTest extends DatabaseTestCase
 
         $this->post(route('replies.store', [$thread->channel->id, $thread->id]), $reply->toArray());
 
-        $this->get(route('threads.show', [$thread->channel->id, $thread->id]))
-            ->assertSee($reply->body);
+        $this->assertDatabaseHas('replies', ['body' => $reply->body]);
     }
 
     /** @test */

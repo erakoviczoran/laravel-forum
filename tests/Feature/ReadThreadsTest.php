@@ -28,15 +28,6 @@ class ReadThreadsTest extends DatabaseTestCase
     }
 
     /** @test */
-    public function aUserCanReadReplies()
-    {
-        $reply = create('App\Reply', ['thread_id' => $this->thread->id]);
-
-        $this->get(route('threads.show', [$this->thread->channel->id, $this->thread->id]))
-            ->assertSee($reply->body);
-    }
-
-    /** @test */
     public function aUserCanFilterThreadsAccordingToATag()
     {
         $channel = create('App\Channel');
@@ -75,5 +66,17 @@ class ReadThreadsTest extends DatabaseTestCase
         $response = $this->getJson(route('threads', ['popular' => 1]))->json();
 
         $this->assertEquals([3, 2, 0], array_column($response, 'replies_count'));
+    }
+
+    /** @test **/
+    public function aUserCanRequestAllRepliesForAGivenThread()
+    {
+        $thread = create('App\Thread');
+        create('App\Reply', ['thread_id' => $thread->id], 2);
+
+        $response = $this->getJson(route('replies', [$thread->channel_id, $thread->id]))->json();
+
+        $this->assertCount(2, $response['data']);
+        $this->assertEquals(2, $response['total']);
     }
 }
