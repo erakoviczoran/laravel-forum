@@ -69,6 +69,17 @@ class ReadThreadsTest extends DatabaseTestCase
     }
 
     /** @test **/
+    public function aUserCanFilterThreadsByThoseThadAreUnanswered()
+    {
+        $thread = create('App\Thread');
+        create('App\Reply', ['thread_id' => $thread->id]);
+
+        $response = $this->getJson(route('threads', ['unanswered' => 1]))->json();
+
+        $this->assertCount(1, $response);
+    }
+
+    /** @test **/
     public function aUserCanRequestAllRepliesForAGivenThread()
     {
         $thread = create('App\Thread');

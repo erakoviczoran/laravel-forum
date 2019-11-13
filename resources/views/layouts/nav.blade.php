@@ -22,6 +22,7 @@
                         <a class="dropdown-item" href="{{ route('threads', ['by' => auth()->user()->name]) }}">My
                             Threads</a>
                         @endif
+                        <a class="dropdown-item" href="{{ route('threads', ['unanswered' => 1]) }}">Unanswered Threads</a>
                         <a class="dropdown-item" href="{{ route('threads', ['popular' => 1]) }}">Popular All Time</a>
                     </div>
                 </li>
