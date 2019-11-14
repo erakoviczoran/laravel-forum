@@ -12,6 +12,8 @@ class Thread extends Model
 
     protected $with = ['user', 'channel'];
 
+    protected $appends = ['isSubscribed'];
+
     protected static function boot()
     {
         parent::boot();
@@ -44,7 +46,13 @@ class Thread extends Model
 
     public function addReply(array $reply)
     {
-        return $this->replies()->create($reply);
+        $reply = $this->replies()->create($reply);
+
+        $this->subscriptions->filter(function ($sub) use ($reply) {
+            return $sub->user_id != $reply->user_id;
+        })->each->notify($reply);
+
+        return $reply;
     }
 
     public function scopeFilter($query, $filters)
@@ -54,20 +62,31 @@ class Thread extends Model
 
     public function subscribe($userId = null)
     {
-        return $this->subscriptions()->create([
+        $this->subscriptions()->create([
             'user_id' => $userId ?: auth()->id(),
         ]);
+
+        return $this;
     }
 
     public function unsubscribe($userId = null)
     {
-        return $this->subscriptions()
+        $this->subscriptions()
             ->where('user_id', $userId ?: auth()->id())
             ->delete();
+
+        return $this;
     }
 
     public function subscriptions($userId = null)
     {
         return $this->hasMany(ThreadSubscription::class);
+    }
+
+    public function getIsSubscribedAttribute()
+    {
+        return $this->subscriptions()
+            ->where('user_id', auth()->id())
+            ->exists();
     }
 }
