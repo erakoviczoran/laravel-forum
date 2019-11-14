@@ -34,7 +34,7 @@ class ReadThreadsTest extends DatabaseTestCase
         $threadInChannel = create('App\Thread', ['channel_id' => $channel->id]);
         $threadNotInChannel = create('App\Thread');
 
-        $this->get('/threads/' . $channel->id)
+        $this->get(route('threads.channels', $channel->id))
             ->assertSee($threadInChannel->title)
             ->assertDontSee($threadNotInChannel->title);
     }

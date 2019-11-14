@@ -2,8 +2,10 @@
 
 namespace Tests\Unit;
 
+use App\Notifications\ThreadWasUpdated;
 use App\User;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Notification;
 use Tests\DatabaseTestCase;
 
 class ThreadTest extends DatabaseTestCase
@@ -30,7 +32,7 @@ class ThreadTest extends DatabaseTestCase
     }
 
     /** @test */
-    public function isCanAddAReply()
+    public function aThreadCanAddAReply()
     {
         $this->thread->addReply([
             'body' => 'foobar',
@@ -38,6 +40,22 @@ class ThreadTest extends DatabaseTestCase
         ]);
 
         $this->assertCount(1, $this->thread->replies);
+    }
+
+    /** @test **/
+    public function aThreadNotifiesAllRegisteredSubscribersWhenANewReplyIsAdded()
+    {
+        Notification::fake();
+
+        $this->signIn();
+
+        $this->thread->subscribe()
+            ->addReply([
+                'body' => 'foobar',
+                'user_id' => create('App\User')->id,
+            ]);
+
+        Notification::assertSentTo(auth()->user(), ThreadWasUpdated::class);
     }
 
     /** @test */
@@ -82,5 +100,21 @@ class ThreadTest extends DatabaseTestCase
         $thread->subscribe();
 
         $this->assertTrue($thread->isSubscribed);
+    }
+
+    /** @test **/
+    public function aThreadCanCheckIfAuthenticatedUserHasReadAllReplies()
+    {
+        $this->signIn();
+
+        $thread = create('App\Thread');
+
+        $user = auth()->user();
+
+        $this->assertTrue($thread->hasUpdatesForLoggedUser());
+
+        $user->read($thread);
+
+        $this->assertFalse($thread->hasUpdatesForLoggedUser());
     }
 }

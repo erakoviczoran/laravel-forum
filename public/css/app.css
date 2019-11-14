@@ -11104,3 +11104,11 @@ a.text-dark:focus {
   display: none;
 }
 
+.card-header.unread {
+  background-color: #ccc;
+}
+
+.card-header.unread h4 {
+  font-weight: bold;
+}
+
