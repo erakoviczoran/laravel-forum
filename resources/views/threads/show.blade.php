@@ -36,6 +36,8 @@
                             <span v-text="repliesCount"></span>
                             {{ Str::plural('comment', $thread->replies_count) . '.' }}
                         </p>
+
+                        <subscribe-button :active="{{ json_encode($thread->isSubscribed) }}"></subscribe-button>
                     </div>
                 </div>
             </div>
