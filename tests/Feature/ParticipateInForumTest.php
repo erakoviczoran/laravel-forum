@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use Exception;
 use Tests\DatabaseTestCase;
 
 class ParticipateInForumTest extends DatabaseTestCase
@@ -39,7 +38,7 @@ class ParticipateInForumTest extends DatabaseTestCase
         $reply = make('App\Reply', ['body' => null]);
 
         $this->post(route('replies.store', [$thread->channel->id, $thread->id]), $reply->toArray())
-            ->assertSessionHasErrors('body');
+            ->assertStatus(422);
     }
 
     /** @test **/
@@ -107,8 +106,22 @@ class ParticipateInForumTest extends DatabaseTestCase
         $thread = create('App\Thread');
         $reply = make('App\Reply', ['body' => 'Yahoo Customer Support']);
 
-        $this->expectException(Exception::class);
+        $this->post(route('replies.store', [$thread->channel_id, $thread->id]), $reply->toArray())
+            ->assertStatus(422);
+    }
 
-        $this->post(route('replies.store', [$thread->channel_id, $thread->id]), $reply->toArray());
+    /** @test **/
+    public function aUsersMayOnlyReplyAMaximumOfOncePerMinute()
+    {
+        $this->signIn();
+
+        $thread = create('App\Thread');
+        $reply = make('App\Reply', ['body' => 'Simple reply']);
+
+        $this->post(route('replies.store', [$thread->channel_id, $thread->id]), $reply->toArray())
+            ->assertStatus(201);
+
+        $this->post(route('replies.store', [$thread->channel_id, $thread->id]), $reply->toArray())
+            ->assertStatus(422);
     }
 }

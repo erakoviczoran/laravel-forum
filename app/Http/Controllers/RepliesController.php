@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Channel;
-use App\Inspections\Spam;
 use App\Reply;
 use App\Thread;
 use Exception;
+use Illuminate\Support\Facades\Gate;
 
 class RepliesController extends Controller
 {
@@ -23,8 +23,12 @@ class RepliesController extends Controller
 
     public function store(Channel $channel, Thread $thread)
     {
+        if (Gate::denies('create', new Reply)) {
+            return response('You are replying to freequently, take a break. :)', 422);
+        }
+
         try {
-            $this->validateReply();
+            $this->validate(request(), ['body' => 'required|spamfree']);
 
             $reply = $thread->addReply([
                 'user_id' => auth()->id(),
@@ -41,9 +45,8 @@ class RepliesController extends Controller
     public function update(Reply $reply)
     {
         $this->authorize('update', $reply);
-
         try {
-            $this->validateReply();
+            $this->validate(request(), ['body' => 'required|spamfree']);
 
             $reply->update(request(['body']));
         } catch (Exception $e) {
@@ -62,11 +65,5 @@ class RepliesController extends Controller
         }
 
         return back();
-    }
-
-    private function validateReply()
-    {
-        $this->validate(request(), ['body' => 'required']);
-        resolve(Spam::class)->detect(request('body'));
     }
 }

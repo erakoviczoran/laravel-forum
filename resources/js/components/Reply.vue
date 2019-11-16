@@ -83,12 +83,12 @@ export default {
 				})
 				.then(data => {
 					flash('Reply updated!');
+
+					this.editing = false;
 				})
 				.catch(err => {
 					flash(err.response.data, 'danger');
 				});
-
-			this.editing = false;
 		},
 		destroy() {
 			axios.delete('/replies/' + this.data.id).catch(e => console.log);

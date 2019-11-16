@@ -2285,14 +2285,16 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     update: function update() {
+      var _this2 = this;
+
       axios.patch('/replies/' + this.data.id, {
         body: this.body
       }).then(function (data) {
         flash('Reply updated!');
+        _this2.editing = false;
       })["catch"](function (err) {
         flash(err.response.data, 'danger');
       });
-      this.editing = false;
     },
     destroy: function destroy() {
       axios["delete"]('/replies/' + this.data.id)["catch"](function (e) {
