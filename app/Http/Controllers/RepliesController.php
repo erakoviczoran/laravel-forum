@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Channel;
+use App\Http\Forms\CreatePostForm;
 use App\Reply;
 use App\Thread;
 use Exception;
-use Illuminate\Support\Facades\Gate;
 
 class RepliesController extends Controller
 {
@@ -21,25 +21,9 @@ class RepliesController extends Controller
         return $thread->replies()->paginate(2);
     }
 
-    public function store(Channel $channel, Thread $thread)
+    public function store(Channel $channel, Thread $thread, CreatePostForm $form)
     {
-        if (Gate::denies('create', new Reply)) {
-            return response('You are replying to freequently, take a break. :)', 422);
-        }
-
-        try {
-            $this->validate(request(), ['body' => 'required|spamfree']);
-
-            $reply = $thread->addReply([
-                'user_id' => auth()->id(),
-                'body' => request('body'),
-            ]);
-
-        } catch (Exception $e) {
-            return response('Sorry, your reply could not be saved at this time.', 422);
-        }
-
-        return $reply->load('user');
+        return $form->persist($thread);
     }
 
     public function update(Reply $reply)

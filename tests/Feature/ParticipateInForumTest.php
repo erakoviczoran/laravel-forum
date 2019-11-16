@@ -37,7 +37,7 @@ class ParticipateInForumTest extends DatabaseTestCase
         $thread = create('App\Thread');
         $reply = make('App\Reply', ['body' => null]);
 
-        $this->post(route('replies.store', [$thread->channel->id, $thread->id]), $reply->toArray())
+        $this->json('post', route('replies.store', [$thread->channel->id, $thread->id]), $reply->toArray())
             ->assertStatus(422);
     }
 
@@ -101,19 +101,19 @@ class ParticipateInForumTest extends DatabaseTestCase
     public function repliesThatContainSpamMayNotBeCreated()
     {
 
-        $this->signIn();
+        $this->withExceptionHandling()->signIn();
 
         $thread = create('App\Thread');
         $reply = make('App\Reply', ['body' => 'Yahoo Customer Support']);
 
-        $this->post(route('replies.store', [$thread->channel_id, $thread->id]), $reply->toArray())
+        $this->json('post', route('replies.store', [$thread->channel_id, $thread->id]), $reply->toArray())
             ->assertStatus(422);
     }
 
     /** @test **/
     public function aUsersMayOnlyReplyAMaximumOfOncePerMinute()
     {
-        $this->signIn();
+        $this->withExceptionHandling()->signIn();
 
         $thread = create('App\Thread');
         $reply = make('App\Reply', ['body' => 'Simple reply']);
@@ -122,6 +122,6 @@ class ParticipateInForumTest extends DatabaseTestCase
             ->assertStatus(201);
 
         $this->post(route('replies.store', [$thread->channel_id, $thread->id]), $reply->toArray())
-            ->assertStatus(422);
+            ->assertStatus(429);
     }
 }
