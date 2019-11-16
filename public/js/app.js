@@ -1902,11 +1902,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["message"],
+  props: ['message'],
   data: function data() {
     return {
-      title: "",
-      body: "",
+      title: '',
+      body: '',
+      level: 'success',
       show: false
     };
   },
@@ -1917,13 +1918,14 @@ __webpack_require__.r(__webpack_exports__);
       this.flash(this.message);
     }
 
-    window.events.$on("flash", function (message) {
-      return _this.flash(message);
+    window.events.$on('flash', function (data) {
+      return _this.flash(data);
     });
   },
   methods: {
-    flash: function flash(message) {
-      this.body = message;
+    flash: function flash(data) {
+      this.body = data.message;
+      this.level = data.level;
       this.show = true;
       this.hide();
     },
@@ -2000,6 +2002,8 @@ __webpack_require__.r(__webpack_exports__);
         flash('Your reply has been posted.');
 
         _this.$emit('created', data);
+      })["catch"](function (err) {
+        flash(err.response.data, 'danger');
       });
     }
   }
@@ -2283,9 +2287,12 @@ __webpack_require__.r(__webpack_exports__);
     update: function update() {
       axios.patch('/replies/' + this.data.id, {
         body: this.body
+      }).then(function (data) {
+        flash('Reply updated!');
+      })["catch"](function (err) {
+        flash(err.response.data, 'danger');
       });
       this.editing = false;
-      flash('Reply updated!');
     },
     destroy: function destroy() {
       axios["delete"]('/replies/' + this.data.id)["catch"](function (e) {
@@ -6912,7 +6919,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.alert-flash {\n  position: fixed;\n  right: 20px;\n  bottom: 20px;\n  z-index: 1000;\n}\n", ""]);
+exports.push([module.i, "\n.alert-flash {\n\tposition: fixed;\n\tright: 20px;\n\tbottom: 20px;\n\tz-index: 1000;\n}\n", ""]);
 
 // exports
 
@@ -56148,7 +56155,11 @@ var render = function() {
     [
       _c(
         "div",
-        { staticClass: "alert alert-success", attrs: { role: "alert" } },
+        {
+          staticClass: "alert",
+          class: "alert-" + _vm.level,
+          attrs: { role: "alert" }
+        },
         [
           _c("h4", { staticClass: "alert-heading" }, [
             _vm._v(_vm._s(_vm.title))
@@ -68874,7 +68885,11 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.events = new Vue();
 
 window.flash = function (message) {
-  window.events.$emit('flash', message);
+  var level = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'success';
+  window.events.$emit('flash', {
+    message: message,
+    level: level
+  });
 };
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
@@ -69595,8 +69610,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/vagrant/code/laravel-forum/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/vagrant/code/laravel-forum/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! c:\code\laravel-forum\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! c:\code\laravel-forum\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

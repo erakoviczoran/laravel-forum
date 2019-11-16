@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Exception;
 use Tests\DatabaseTestCase;
 
 class ParticipateInForumTest extends DatabaseTestCase
@@ -95,5 +96,19 @@ class ParticipateInForumTest extends DatabaseTestCase
         $this->patch(route('replies.update', $reply), ['body' => $body]);
 
         $this->assertDatabaseHas('replies', ['id' => $reply->id, 'body' => $body]);
+    }
+
+    /** @test **/
+    public function repliesThatContainSpamMayNotBeCreated()
+    {
+
+        $this->signIn();
+
+        $thread = create('App\Thread');
+        $reply = make('App\Reply', ['body' => 'Yahoo Customer Support']);
+
+        $this->expectException(Exception::class);
+
+        $this->post(route('replies.store', [$thread->channel_id, $thread->id]), $reply->toArray());
     }
 }

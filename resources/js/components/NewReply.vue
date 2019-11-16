@@ -41,13 +41,18 @@ export default {
 	},
 	methods: {
 		addReply() {
-			axios.post(this.endpoint, { body: this.body }).then(({ data }) => {
-				this.body = '';
+			axios
+				.post(this.endpoint, { body: this.body })
+				.then(({ data }) => {
+					this.body = '';
 
-				flash('Your reply has been posted.');
+					flash('Your reply has been posted.');
 
-				this.$emit('created', data);
-			});
+					this.$emit('created', data);
+				})
+				.catch(err => {
+					flash(err.response.data, 'danger');
+				});
 		}
 	}
 };

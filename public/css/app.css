@@ -11105,7 +11105,7 @@ a.text-dark:focus {
 }
 
 .card-header.unread {
-  background-color: #ccc;
+  background-color: #e0e0e0;
 }
 
 .card-header.unread h4 {

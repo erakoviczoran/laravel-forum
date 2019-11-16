@@ -77,13 +77,18 @@ export default {
 	},
 	methods: {
 		update() {
-			axios.patch('/replies/' + this.data.id, {
-				body: this.body
-			});
+			axios
+				.patch('/replies/' + this.data.id, {
+					body: this.body
+				})
+				.then(data => {
+					flash('Reply updated!');
+				})
+				.catch(err => {
+					flash(err.response.data, 'danger');
+				});
 
 			this.editing = false;
-
-			flash('Reply updated!');
 		},
 		destroy() {
 			axios.delete('/replies/' + this.data.id).catch(e => console.log);
