@@ -26,4 +26,14 @@ class ReplyTest extends DatabaseTestCase
 
         $this->assertFalse($reply->wasJustPublished());
     }
+
+    /** @test **/
+    public function itCanDetectAllMentionedUsersInABody()
+    {
+        $reply = create('App\Reply', [
+            'body' => '@JaneDoe wants to talk to @JohnDoe',
+        ]);
+
+        $this->assertEquals(['JaneDoe', 'JohnDoe'], $reply->mentionedUsers());
+    }
 }
