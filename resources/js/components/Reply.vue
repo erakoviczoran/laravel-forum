@@ -14,16 +14,19 @@
 				<div class="card-body">
 					<div class="body">
 						<div v-if="editing">
-							<textarea
-								class="form-control mb-2"
-								name="body"
-								rows="10"
-								v-model="body"
-							></textarea>
-							<button class="btn btn-primary" @click="update">Update</button>
-							<button class="btn btn-link" @click="editing = false">
-								Cancel
-							</button>
+							<form @submit.prevent="update">
+								<textarea
+									class="form-control mb-2"
+									name="body"
+									rows="10"
+									v-model="body"
+									required
+								></textarea>
+								<button class="btn btn-primary">Update</button>
+								<button type="button" class="btn btn-link" @click="editing = false">
+									Cancel
+								</button>
+							</form>
 						</div>
 						<div v-else v-text="body"></div>
 					</div>

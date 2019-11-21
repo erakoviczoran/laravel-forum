@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace App\Listeners;
 
 use App\Events\ThreadHasNewReply;
 use App\Notifications\YouWereMentioned;
@@ -28,10 +28,10 @@ class NotifyMentionedUsers
     {
         $reply = $event->getReply();
 
-        collect($reply->mentionedUsers())->map(function ($name) {
-            return User::whereName($name)->first();
-        })->filter()->each(function ($user) use ($reply) {
-            $user->notify(new YouWereMentioned($reply));
-        });
+        User::whereIn('name', $reply->mentionedUsers())
+            ->get()
+            ->each(function ($user) use ($reply) {
+                $user->notify(new YouWereMentioned($reply));
+            });
     }
 }

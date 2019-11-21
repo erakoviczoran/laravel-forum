@@ -6,7 +6,6 @@ use App\Channel;
 use App\Filters\ThreadFilters;
 use App\Thread;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ThreadsController extends Controller
 {
@@ -56,6 +55,7 @@ class ThreadsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -127,9 +127,7 @@ class ThreadsController extends Controller
     {
         $this->authorize('update', $thread);
 
-        DB::transaction(function () use ($thread) {
-            $thread->delete();
-        });
+        $thread->delete();
 
         if (request()->isJson()) {
             return response([], 204);

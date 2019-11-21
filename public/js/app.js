@@ -2254,6 +2254,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -56483,48 +56486,57 @@ var render = function() {
           _c("div", { staticClass: "body" }, [
             _vm.editing
               ? _c("div", [
-                  _c("textarea", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.body,
-                        expression: "body"
-                      }
-                    ],
-                    staticClass: "form-control mb-2",
-                    attrs: { name: "body", rows: "10" },
-                    domProps: { value: _vm.body },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.body = $event.target.value
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
                   _c(
-                    "button",
+                    "form",
                     {
-                      staticClass: "btn btn-primary",
-                      on: { click: _vm.update }
-                    },
-                    [_vm._v("Update")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-link",
                       on: {
-                        click: function($event) {
-                          _vm.editing = false
+                        submit: function($event) {
+                          $event.preventDefault()
+                          return _vm.update($event)
                         }
                       }
                     },
-                    [_vm._v("\n\t\t\t\t\t\t\tCancel\n\t\t\t\t\t\t")]
+                    [
+                      _c("textarea", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.body,
+                            expression: "body"
+                          }
+                        ],
+                        staticClass: "form-control mb-2",
+                        attrs: { name: "body", rows: "10", required: "" },
+                        domProps: { value: _vm.body },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.body = $event.target.value
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("button", { staticClass: "btn btn-primary" }, [
+                        _vm._v("Update")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-link",
+                          attrs: { type: "button" },
+                          on: {
+                            click: function($event) {
+                              _vm.editing = false
+                            }
+                          }
+                        },
+                        [_vm._v("\n\t\t\t\t\t\t\t\tCancel\n\t\t\t\t\t\t\t")]
+                      )
+                    ]
                   )
                 ])
               : _c("div", { domProps: { textContent: _vm._s(_vm.body) } })
