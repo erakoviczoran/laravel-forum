@@ -6924,7 +6924,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.alert-flash {\n\tposition: fixed;\n\tright: 20px;\n\tbottom: 20px;\n\tz-index: 1000;\n}\n", ""]);
+exports.push([module.i, "\n.alert-flash {\r\n\tposition: fixed;\r\n\tright: 20px;\r\n\tbottom: 20px;\r\n\tz-index: 1000;\n}\r\n", ""]);
 
 // exports
 
@@ -6943,7 +6943,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.page-item > span {\n\tposition: relative;\n\tdisplay: block;\n\tpadding: 0.5rem 0.75rem;\n\tmargin-left: -1px;\n\tmargin-top: 1px;\n\tline-height: 1.25;\n}\n", ""]);
+exports.push([module.i, "\n.page-item > span {\r\n\tposition: relative;\r\n\tdisplay: block;\r\n\tpadding: 0.5rem 0.75rem;\r\n\tmargin-left: -1px;\r\n\tmargin-top: 1px;\r\n\tline-height: 1.25;\n}\r\n", ""]);
 
 // exports
 
@@ -6962,7 +6962,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.dropdown .dropdown-toggle::after {\n\tcontent: none;\n}\n.btn:focus,\n.btn.focus {\n\toutline: 0;\n\tbox-shadow: none;\n}\n.dropdown.show {\n\toutline: none;\n}\n.dropdown .num-notifications {\n\tposition: relative;\n\ttop: 0.75em;\n\tfont-size: 0.75em;\n}\n", ""]);
+exports.push([module.i, "\n.dropdown .dropdown-toggle::after {\r\n\tcontent: none;\n}\n.btn:focus,\r\n.btn.focus {\r\n\toutline: 0;\r\n\tbox-shadow: none;\n}\n.dropdown.show {\r\n\toutline: none;\n}\n.dropdown .num-notifications {\r\n\tposition: relative;\r\n\ttop: 0.75em;\r\n\tfont-size: 0.75em;\n}\r\n", ""]);
 
 // exports
 
