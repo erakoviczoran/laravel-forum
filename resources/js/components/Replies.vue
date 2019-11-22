@@ -1,7 +1,12 @@
 <template>
 	<div>
-		<div v-for="(reply, index) in items" :key="reply.id">
-			<reply :data="reply" @deleted="remove(index)"></reply>
+		<div v-for="(reply, index) in items" :key="index">
+			<reply
+				:data="reply"
+				:index="index"
+				@updated="update(index, $event)"
+				@deleted="remove(index)"
+			></reply>
 		</div>
 
 		<div class="row mt-2">
@@ -42,6 +47,9 @@ export default {
 			}
 
 			return `${location.pathname}/replies?page=${page}`;
+    },
+		update(index, data) {
+			this.items[index].body = data;
 		},
 		refresh({ data }) {
 			this.dataSet = data;

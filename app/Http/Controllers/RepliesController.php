@@ -32,6 +32,8 @@ class RepliesController extends Controller
         $this->validate(request(), ['body' => 'required|spamfree']);
 
         $reply->update(request(['body']));
+
+        return $reply->body;
     }
 
     public function destroy(Reply $reply)

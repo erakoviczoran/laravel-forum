@@ -19,11 +19,15 @@
 									class="form-control mb-2"
 									name="body"
 									rows="10"
-									v-model="body"
+									v-model="bodyText"
 									required
 								></textarea>
 								<button type="submit" class="btn btn-primary">Update</button>
-								<button type="button" class="btn btn-link" @click="editing = false">
+								<button
+									type="button"
+									class="btn btn-link"
+									@click="editing = false"
+								>
 									Cancel
 								</button>
 							</form>
@@ -67,6 +71,14 @@ export default {
 			editing: false
 		};
 	},
+	watch: {
+		data: {
+			deep: true,
+			handler(newData, oldData) {
+				this.body = newData.body;
+			}
+		}
+	},
 	computed: {
 		ago() {
 			return moment(this.data.created_at).fromNow() + '...';
@@ -76,16 +88,26 @@ export default {
 		},
 		canUpdate() {
 			return this.authorize(user => this.data.user_id == user.id);
+		},
+		bodyText: {
+			set(data) {
+				this.body = data;
+			},
+			get() {
+				return this.body.replace(/<a[^>]+>/gi, '').replace('</a>', '');
+			}
 		}
 	},
 	methods: {
 		update() {
 			axios
 				.patch('/replies/' + this.data.id, {
-					body: this.body
+					body: this.bodyText
 				})
 				.then(data => {
 					flash('Reply updated!');
+
+					this.$emit('updated', data.data);
 
 					this.editing = false;
 				})

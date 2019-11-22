@@ -3387,6 +3387,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -3416,6 +3421,9 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       return "".concat(location.pathname, "/replies?page=").concat(page);
+    },
+    update: function update(index, data) {
+      this.items[index].body = data;
     },
     refresh: function refresh(_ref) {
       var data = _ref.data;
@@ -3495,6 +3503,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3509,6 +3521,14 @@ __webpack_require__.r(__webpack_exports__);
       editing: false
     };
   },
+  watch: {
+    data: {
+      deep: true,
+      handler: function handler(newData, oldData) {
+        this.body = newData.body;
+      }
+    }
+  },
   computed: {
     ago: function ago() {
       return moment__WEBPACK_IMPORTED_MODULE_0___default()(this.data.created_at).fromNow() + '...';
@@ -3522,6 +3542,14 @@ __webpack_require__.r(__webpack_exports__);
       return this.authorize(function (user) {
         return _this.data.user_id == user.id;
       });
+    },
+    bodyText: {
+      set: function set(data) {
+        this.body = data;
+      },
+      get: function get() {
+        return this.body.replace(/<a[^>]+>/gi, '').replace('</a>', '');
+      }
     }
   },
   methods: {
@@ -3529,9 +3557,12 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       axios.patch('/replies/' + this.data.id, {
-        body: this.body
+        body: this.bodyText
       }).then(function (data) {
         flash('Reply updated!');
+
+        _this2.$emit('updated', data.data);
+
         _this2.editing = false;
       })["catch"](function (err) {
         flash(err.response.data, 'danger');
@@ -58089,11 +58120,14 @@ var render = function() {
       _vm._l(_vm.items, function(reply, index) {
         return _c(
           "div",
-          { key: reply.id },
+          { key: index },
           [
             _c("reply", {
-              attrs: { data: reply },
+              attrs: { data: reply, index: index },
               on: {
+                updated: function($event) {
+                  return _vm.update(index, $event)
+                },
                 deleted: function($event) {
                   return _vm.remove(index)
                 }
@@ -58193,19 +58227,19 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.body,
-                            expression: "body"
+                            value: _vm.bodyText,
+                            expression: "bodyText"
                           }
                         ],
                         staticClass: "form-control mb-2",
                         attrs: { name: "body", rows: "10", required: "" },
-                        domProps: { value: _vm.body },
+                        domProps: { value: _vm.bodyText },
                         on: {
                           input: function($event) {
                             if ($event.target.composing) {
                               return
                             }
-                            _vm.body = $event.target.value
+                            _vm.bodyText = $event.target.value
                           }
                         }
                       }),
