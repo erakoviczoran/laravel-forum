@@ -22,13 +22,13 @@
 									v-model="body"
 									required
 								></textarea>
-								<button class="btn btn-primary">Update</button>
+								<button type="submit" class="btn btn-primary">Update</button>
 								<button type="button" class="btn btn-link" @click="editing = false">
 									Cancel
 								</button>
 							</form>
 						</div>
-						<div v-else v-text="body"></div>
+						<div v-else v-html="body"></div>
 					</div>
 				</div>
 				<div class="card-footer" v-if="canUpdate">

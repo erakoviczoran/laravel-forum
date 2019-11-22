@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\User;
 use Carbon\Carbon;
 use Tests\DatabaseTestCase;
 
@@ -35,5 +36,22 @@ class ReplyTest extends DatabaseTestCase
         ]);
 
         $this->assertEquals(['JaneDoe', 'JohnDoe'], $reply->mentionedUsers());
+    }
+
+    /** @test **/
+    public function itWrapsMentionedUsersInTheBodyWithinAnchorTags()
+    {
+        create('App\User', ['name' => 'JaneDoe']);
+        create('App\User', ['name' => 'Frank-Doe']);
+
+        $reply = create('App\Reply', [
+            'body' => 'Hello @JaneDoe and @Frank-Doe.',
+        ]);
+
+        $this->assertEquals(
+            'Hello <a href="/profiles/' . User::whereName('JaneDoe')->first()->id . '">@JaneDoe</a>' .
+            ' and <a href="/profiles/' . User::whereName('Frank-Doe')->first()->id . '">@Frank-Doe</a>.',
+            $reply->body
+        );
     }
 }

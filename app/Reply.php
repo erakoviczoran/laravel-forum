@@ -32,8 +32,26 @@ class Reply extends Model
 
     public function mentionedUsers()
     {
-        preg_match_all('/\@([^\s\.]+)/', $this->body, $matches);
+        return $this->getMentionedUsers($this->body);
+    }
+
+    public function getMentionedUsers($body)
+    {
+        preg_match_all('/@([\w\-]+)/', $body, $matches);
 
         return $matches[1];
+    }
+
+    public function setBodyAttribute($body)
+    {
+        $users = User::whereIn('name', $this->getMentionedUsers($body))->get();
+
+        $body = preg_replace('/@([\w\-]+)/', '<a href="#$1">$0</a>', $body);
+
+        foreach ($users as $user) {
+            $body = str_replace(('#' . $user->name), ('/profiles/' . $user->id), $body);
+        }
+
+        $this->attributes['body'] = $body;
     }
 }

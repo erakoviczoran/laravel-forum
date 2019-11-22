@@ -30,6 +30,8 @@
             ]);
         !!};
     </script>
+
+    @yield('header')
 </head>
 
 <body>

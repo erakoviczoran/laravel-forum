@@ -23,4 +23,16 @@ class MentionUserTest extends DatabaseTestCase
 
         $this->assertCount(1, $jane->notifications);
     }
+
+    /** @test **/
+    public function itCatFetchAllUsersStartingWithTheGivenCharacters()
+    {
+        create('App\User', ['name' => 'JohnDoe']);
+        create('App\User', ['name' => 'JohnDoe2']);
+        create('App\User', ['name' => 'JaneDoe']);
+
+        $results = $this->json('get', '/api/users', ['name' => 'John']);
+
+        $this->assertCount(2, $results->json());
+    }
 }

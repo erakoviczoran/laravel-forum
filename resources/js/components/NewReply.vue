@@ -2,20 +2,17 @@
 	<div>
 		<div class="row mt-3" v-if="signedIn">
 			<div class="col-md-7 offset-1">
-				<textarea
-					class="form-control"
-					name="body"
-					id=""
-					rows="5"
-					v-model="body"
-					required
-				></textarea>
-				<input
-					type="submit"
-					class="btn btn-primary mt-2"
-					value="Post"
-					@click="addReply"
-				/>
+				<form @submit.prevent="addReply">
+					<textarea
+						class="form-control"
+						name="body"
+						id="body"
+						rows="5"
+						v-model="body"
+						required
+					></textarea>
+					<input type="submit" class="btn btn-primary mt-2" value="Post" />
+				</form>
 			</div>
 		</div>
 		<div class="row justify-content-center mt-2" v-else>
@@ -27,6 +24,9 @@
 </template>
 
 <script>
+import 'at.js';
+import 'jquery.caret';
+
 export default {
 	props: ['endpoint'],
 	data() {
@@ -38,6 +38,19 @@ export default {
 		signedIn() {
 			return window.data.signedIn;
 		}
+	},
+	mounted() {
+		$('#body').atwho({
+			at: '@',
+			delay: 500,
+			callbacks: {
+				remoteFilter: function(query, callback) {
+					$.getJSON('/api/users', { name: query }, function(usernames) {
+						callback(usernames);
+					});
+				}
+			}
+		});
 	},
 	methods: {
 		addReply() {
