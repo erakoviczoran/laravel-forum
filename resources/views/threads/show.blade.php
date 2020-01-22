@@ -12,6 +12,7 @@
                 <div class="card">
                     <div class="card-header d-flex">
                         <div class="flex-grow-1">
+                            <img src="{{ $thread->user->avatar_path }}" alt="{{ asset($thread->user->name) }}" width="50" height="50">
                             <a href="{{ route('profiles.user', $thread->user->id) }}">{{ $thread->user->name }}</a>
                             posted:
                             {{ $thread->title }}

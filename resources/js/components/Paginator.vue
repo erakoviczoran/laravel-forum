@@ -1,4 +1,3 @@
-
 <template>
 	<ul class="pagination" v-if="shouldPaginate">
 		<li class="page-item" v-show="prevUrl">
