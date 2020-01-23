@@ -42,7 +42,7 @@ class ThreadTest extends DatabaseTestCase
         $this->assertCount(1, $this->thread->replies);
     }
 
-    /** @test **/
+    /** @test * */
     public function aThreadNotifiesAllRegisteredSubscribersWhenANewReplyIsAdded()
     {
         Notification::fake();
@@ -50,10 +50,10 @@ class ThreadTest extends DatabaseTestCase
         $this->signIn();
 
         $this->thread->subscribe()
-            ->addReply([
-                'body' => 'foobar',
-                'user_id' => create('App\User')->id,
-            ]);
+                     ->addReply([
+                         'body' => 'foobar',
+                         'user_id' => create('App\User')->id,
+                     ]);
 
         Notification::assertSentTo(auth()->user(), ThreadWasUpdated::class);
     }
@@ -66,7 +66,7 @@ class ThreadTest extends DatabaseTestCase
         $this->assertInstanceOf('App\Channel', $thread->channel);
     }
 
-    /** @test **/
+    /** @test * */
     public function aThreadCanBeSubscribedTo()
     {
         $thread = create('App\Thread');
@@ -76,7 +76,7 @@ class ThreadTest extends DatabaseTestCase
         $this->assertEquals(1, $thread->subscriptions()->where('user_id', $userId)->count());
     }
 
-    /** @test **/
+    /** @test * */
     public function aThreadCanBeUnsubscribedFrom()
     {
         $thread = create('App\Thread');
@@ -88,7 +88,7 @@ class ThreadTest extends DatabaseTestCase
         $this->assertCount(0, $thread->subscriptions);
     }
 
-    /** @test **/
+    /** @test * */
     public function itKnowsIfAuthenticatedUserIsSubscribed()
     {
         $thread = create('App\Thread');
@@ -102,7 +102,7 @@ class ThreadTest extends DatabaseTestCase
         $this->assertTrue($thread->isSubscribed);
     }
 
-    /** @test **/
+    /** @test * */
     public function aThreadCanCheckIfAuthenticatedUserHasReadAllReplies()
     {
         $this->signIn();
@@ -123,16 +123,18 @@ class ThreadTest extends DatabaseTestCase
     {
         $thread = make('App\Thread', ['id' => 1]);
 
-        $thread->resetVisits();
+        $visits = $thread->visits();
 
-        $this->assertSame(0, $thread->visits());
+        $visits->reset();
 
-        $thread->recordVisit();
+        $this->assertSame(0, $visits->count());
 
-        $this->assertEquals(1, $thread->visits());
+        $visits->record();
 
-        $thread->recordVisit();
+        $this->assertEquals(1, $visits->count());
 
-        $this->assertEquals(2, $thread->visits());
+        $visits->record();
+
+        $this->assertEquals(2, $visits->count());
     }
 }

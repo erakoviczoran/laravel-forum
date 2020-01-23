@@ -5,6 +5,7 @@ namespace App;
 use App\Events\ThreadHasNewReply;
 use App\traits\RecordVisits;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Redis;
 
 class Thread extends Model
 {
@@ -102,5 +103,10 @@ class Thread extends Model
         $key = auth()->user()->visitedThreadCacheKey($this);
 
         return $this->updated_at > cache($key);
+    }
+
+    public function visits()
+    {
+        return new Visits($this);
     }
 }
