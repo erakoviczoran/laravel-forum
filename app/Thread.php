@@ -3,11 +3,12 @@
 namespace App;
 
 use App\Events\ThreadHasNewReply;
+use App\traits\RecordVisits;
 use Illuminate\Database\Eloquent\Model;
 
 class Thread extends Model
 {
-    use RecordsActivity;
+    use RecordsActivity, RecordVisits;
 
     protected $guarded = [];
 
@@ -31,8 +32,8 @@ class Thread extends Model
     public function replies()
     {
         return $this->hasMany(Reply::class)
-            ->withCount('favorites')
-            ->with('user');
+                    ->withCount('favorites')
+                    ->with('user');
     }
 
     public function user()
@@ -78,8 +79,8 @@ class Thread extends Model
     public function unsubscribe($userId = null)
     {
         $this->subscriptions()
-            ->where('user_id', $userId ?: auth()->id())
-            ->delete();
+             ->where('user_id', $userId ?: auth()->id())
+             ->delete();
 
         return $this;
     }
@@ -92,8 +93,8 @@ class Thread extends Model
     public function getIsSubscribedAttribute()
     {
         return $this->subscriptions()
-            ->where('user_id', auth()->id())
-            ->exists();
+                    ->where('user_id', auth()->id())
+                    ->exists();
     }
 
     public function hasUpdatesForLoggedUser()

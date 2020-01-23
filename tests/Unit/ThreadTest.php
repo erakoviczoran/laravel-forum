@@ -117,4 +117,22 @@ class ThreadTest extends DatabaseTestCase
 
         $this->assertFalse($thread->hasUpdatesForLoggedUser());
     }
+
+    /** @test */
+    public function aThreadRecordsEachVisit()
+    {
+        $thread = make('App\Thread', ['id' => 1]);
+
+        $thread->resetVisits();
+
+        $this->assertSame(0, $thread->visits());
+
+        $thread->recordVisit();
+
+        $this->assertEquals(1, $thread->visits());
+
+        $thread->recordVisit();
+
+        $this->assertEquals(2, $thread->visits());
+    }
 }
