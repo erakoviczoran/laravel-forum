@@ -35,17 +35,17 @@
 </head>
 
 <body>
-    <div id="app">
-        @include('layouts.nav')
+<div id="app">
+    @include('layouts.nav')
 
-        <main class="py-4">
-            @yield('content')
+    <main class="py-4">
+        @yield('content')
 
-            <flash message="{{ session('flash') }}"></flash>
-        </main>
-    </div>
+        <flash message="{{ session('flash') }}"></flash>
+    </main>
+</div>
 
-    <script scr="{{ asset('js/app.js') }}"></script>
+<script scr="{{ asset('js/app.js') }}"></script>
 </body>
 
 </html>

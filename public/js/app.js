@@ -3190,7 +3190,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       title: '',
-      body: '',
+      body: this.message,
       level: 'success',
       show: false
     };
@@ -3199,7 +3199,7 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     if (this.message) {
-      this.flash(this.message);
+      this.flash();
     }
 
     window.events.$on('flash', function (data) {
@@ -3208,8 +3208,11 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     flash: function flash(data) {
-      this.body = data.message;
-      this.level = data.level;
+      if (data) {
+        this.body = data.message;
+        this.level = data.level;
+      }
+
       this.show = true;
       this.hide();
     },
@@ -8291,7 +8294,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.alert-flash {\r\n\tposition: fixed;\r\n\tright: 20px;\r\n\tbottom: 20px;\r\n\tz-index: 1000;\n}\r\n", ""]);
+exports.push([module.i, "\n.alert-flash {\n  position: fixed;\n  right: 20px;\n  bottom: 20px;\n  z-index: 1000;\n}\n", ""]);
 
 // exports
 

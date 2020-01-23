@@ -19,7 +19,7 @@ Route::get('/threads', 'ThreadsController@index')->name('threads');
 
 Route::get('/threads/create', 'ThreadsController@create')->name('threads.create');
 
-Route::post('/threads', 'ThreadsController@store')->name('threads.store');
+Route::post('/threads', 'ThreadsController@store')->name('threads.store')->middleware('must-be-verified');
 
 Route::get('/threads/{channel}', 'ThreadsController@index')->name('threads.channels');
 
@@ -41,13 +41,16 @@ Route::delete('/replies/{reply}/favorites', 'FavoritesController@destroy')->name
 
 Route::get('/profiles/{user}', 'ProfilesController@show')->name('profiles.user');
 
-Route::post('/threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptionsController@store')->name('threadSubscriptions.store');
+Route::post('/threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptionsController@store')
+     ->name('threadSubscriptions.store');
 
-Route::delete('/threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptionsController@destroy')->name('threadSubscriptions.delete');
+Route::delete('/threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptionsController@destroy')
+     ->name('threadSubscriptions.delete');
 
 Route::get('/profiles/{user}/notifications', 'UserNotificationsController@index')->name('userNotifications');
 
-Route::delete('/profiles/{user}/notifications/{notification}', 'UserNotificationsController@destroy')->name('userNotifications.delete');
+Route::delete('/profiles/{user}/notifications/{notification}', 'UserNotificationsController@destroy')
+     ->name('userNotifications.delete');
 
 Route::get('/api/users', 'Api\UsersController@index')->name('api.users');
 

@@ -5,11 +5,10 @@ namespace App;
 use App\Events\ThreadHasNewReply;
 use App\traits\RecordVisits;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Redis;
 
 class Thread extends Model
 {
-    use RecordsActivity, RecordVisits;
+    use RecordsActivity;
 
     protected $guarded = [];
 

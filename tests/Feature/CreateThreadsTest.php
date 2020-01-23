@@ -13,10 +13,10 @@ class CreateThreadsTest extends DatabaseTestCase
         $this->withExceptionHandling();
 
         $this->get(route('threads.create'))
-            ->assertRedirect('/login');
+             ->assertRedirect('/login');
 
         $this->post(route('threads'))
-            ->assertRedirect('/login');
+             ->assertRedirect('/login');
     }
 
     /** @test */
@@ -25,6 +25,14 @@ class CreateThreadsTest extends DatabaseTestCase
         $this->withExceptionHandling();
 
         $this->get(route('threads.create'))->assertRedirect('/login');
+    }
+
+    /** @test */
+    public function authenticatedUsersMustFirstConfirmTheirEmailAdressBeforeCreatingThreads()
+    {
+        $this->publishThread()
+             ->assertRedirect('/threads')
+             ->assertSessionHas('flash', 'You must first confirm your email address.');
     }
 
     /** @test */
@@ -39,22 +47,22 @@ class CreateThreadsTest extends DatabaseTestCase
 
         // when we visit thread page check that we see new thread
         $this->get($response->headers->get('Location'))
-            ->assertSee($thread->title)
-            ->assertSee($thread->body);
+             ->assertSee($thread->title)
+             ->assertSee($thread->body);
     }
 
     /** @test */
     public function aThreadRequiresATitle()
     {
         $this->publishThread(['title' => null])
-            ->assertSessionHasErrors('title');
+             ->assertSessionHasErrors('title');
     }
 
     /** @test */
     public function aThreadRequiresABody()
     {
         $this->publishThread(['body' => null])
-            ->assertSessionHasErrors('body');
+             ->assertSessionHasErrors('body');
     }
 
     /** @test */
@@ -87,7 +95,7 @@ class CreateThreadsTest extends DatabaseTestCase
         $reply = create('App\Reply', ['thread_id' => $thread->id]);
 
         $this->json('DELETE', route('threads.delete', [$thread->channel, $thread]))
-            ->assertStatus(204);
+             ->assertStatus(204);
 
         $this->assertDatabaseMissing('threads', ['id' => $thread->id]);
         $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
@@ -101,10 +109,10 @@ class CreateThreadsTest extends DatabaseTestCase
         factory('App\Channel', 2)->create();
 
         $this->publishThread(['channel_id' => null])
-            ->assertSessionHasErrors('channel_id');
+             ->assertSessionHasErrors('channel_id');
 
         $this->publishThread(['channel_id' => 999])
-            ->assertSessionHasErrors('channel_id');
+             ->assertSessionHasErrors('channel_id');
     }
 
     public function publishThread($overrides = [])
