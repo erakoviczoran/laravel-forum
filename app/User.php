@@ -16,7 +16,13 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'avatar_path',
+        'name',
+        'email',
+        'password',
+        'avatar_path',
+        'verification_token',
+        'verified',
+        'email_verified_at',
     ];
 
     /**
@@ -35,6 +41,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'verified' => 'boolean',
     ];
 
     public function threads()
@@ -69,5 +76,13 @@ class User extends Authenticatable
             $this->visitedThreadCacheKey($thread),
             Carbon::now()
         );
+    }
+
+    public function verify()
+    {
+        $this->verified = true;
+        $this->email_verified_at = now();
+        
+        $this->save();
     }
 }

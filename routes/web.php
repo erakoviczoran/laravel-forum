@@ -52,6 +52,8 @@ Route::get('/profiles/{user}/notifications', 'UserNotificationsController@index'
 Route::delete('/profiles/{user}/notifications/{notification}', 'UserNotificationsController@destroy')
      ->name('userNotifications.delete');
 
+Route::get('/register/verify', 'Api\RegisterVerificationController@index')->name('register.verify');
+
 Route::get('/api/users', 'Api\UsersController@index')->name('api.users');
 
 Route::post('/api/users/{user}/avatar', 'Api\UserAvatarController@store')->name('api.avatar');
