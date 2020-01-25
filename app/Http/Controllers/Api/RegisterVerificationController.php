@@ -10,12 +10,13 @@ class RegisterVerificationController extends Controller
 {
     public function index()
     {
-        $user = User::where('verification_token', request('token'))
-                    ->firstOrFail()
-                    ->verify();
+        $user = User::where('verification_token', request('token'))->first();
 
-        return redirect()
-            ->route('threads')
-            ->with('flash', 'Your account is now verified! You may now post to the forum.');
+        if ($user && $user->verify()) {
+            return redirect(route('threads'))
+                ->with('flash', 'Your account is now verified! You may now post to the forum.');
+        }
+
+        return redirect(route('threads'))->with('flash', 'Unknown token.');
     }
 }

@@ -28,15 +28,21 @@ class CreateThreadsTest extends DatabaseTestCase
     }
 
     /** @test */
-    public function authenticatedUsersMustFirstConfirmTheirEmailAdressBeforeCreatingThreads()
+    public function newUsersMustFirstConfirmTheirEmailAdressBeforeCreatingThreads()
     {
-        $this->publishThread()
+        $user = factory('App\User')->state('unverified')->create();
+
+        $this->withExceptionHandling()->signIn($user);
+
+        $thread = make('App\Thread');
+
+        $this->post(route('threads.store', $thread->toArray()))
              ->assertRedirect('/threads')
              ->assertSessionHas('flash', 'You must first confirm your email address.');
     }
 
     /** @test */
-    public function anAuthenticatedUserCanCreateNewForumThread()
+    public function aUserCanCreateNewForumThread()
     {
         // signed in user
         $this->signIn();

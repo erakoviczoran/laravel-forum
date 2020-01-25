@@ -23,7 +23,9 @@ class RegistrationTest extends DatabaseTestCase
     /** @test */
     public function userCanVerifyTheirEmailAddresses()
     {
-        $this->post('/register', [
+        Mail::fake();
+
+        $this->post(route('register'), [
             'name' => 'John Doe',
             'email' => 'john@example.com',
             'password' => 'foobarbaz',
@@ -40,5 +42,13 @@ class RegistrationTest extends DatabaseTestCase
         $this->assertTrue($user->fresh()->verified);
 
         $response->assertRedirect(route('threads'));
+    }
+
+    /** @test */
+    public function verifyingAnInvalidToken()
+    {
+        $this->get(route('register.verify', ['token' => 'invalid']))
+             ->assertRedirect(route('threads'))
+             ->assertSessionHas('flash', 'Unknown token.');
     }
 }
