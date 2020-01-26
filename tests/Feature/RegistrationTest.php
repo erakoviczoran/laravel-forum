@@ -39,9 +39,12 @@ class RegistrationTest extends DatabaseTestCase
 
         $response = $this->get(route('register.verify', ['token' => $user->verification_token]));
 
-        $this->assertTrue($user->fresh()->verified);
-
         $response->assertRedirect(route('threads'));
+
+        tap($user->fresh(), function ($user) {
+            $this->assertTrue($user->verified);
+            $this->assertNull($user->verification_token);
+        });
     }
 
     /** @test */

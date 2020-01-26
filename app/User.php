@@ -82,6 +82,7 @@ class User extends Authenticatable
     {
         $this->verified = true;
         $this->email_verified_at = now();
+        $this->verification_token = null;
 
         $this->save();
     }
